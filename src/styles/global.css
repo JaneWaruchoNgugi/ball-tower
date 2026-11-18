@@ -669,3 +669,22 @@ button:disabled{opacity:.45}
 .w-hub{width:36%; height:36%; background:radial-gradient(circle at 40% 30%, #1b4144, #061416 78%); box-shadow:0 0 0 4px #ffcb45, 0 0 0 7px rgba(0,0,0,.45), 0 10px 22px rgba(0,0,0,.6), inset 0 2px 8px rgba(255,255,255,.1)}
 .w-hub-txt{font-size:30px; text-shadow:0 0 18px rgba(255,203,69,.5)}
 .w-win{inset:3%; background:conic-gradient(from -4deg, rgba(255,255,255,.95) 0 8deg, transparent 8deg); mask:radial-gradient(circle, transparent 48%, #000 49%, #000 92%, transparent 92.5%)}
+
+/* =====================================================================
+   LUCKY WHEEL 45 — classic money-wheel finish (overrides the earlier art)
+   ===================================================================== */
+.wheel-svg.classic .cw-div{stroke:rgba(255,248,225,.55); stroke-width:1.3}
+.wheel-svg.classic .cw-div.major{stroke:#ffd86a; stroke-width:3}
+.cw-num{font-family:var(--font-display); font-size:20px; letter-spacing:-.02em; fill:#fff; text-anchor:middle; dominant-baseline:central; paint-order:stroke; stroke:rgba(0,0,0,.45); stroke-width:3px; stroke-linejoin:round}
+.cw-num.on{fill:#fff6cf}
+.cw-letter{font-family:var(--font-display); font-size:30px; fill:rgba(255,255,255,.95); text-anchor:middle; dominant-baseline:central; paint-order:stroke; stroke:rgba(0,0,0,.35); stroke-width:4px}
+.cw-bet{fill:rgba(255,240,180,.10); stroke:#fff4c8; stroke-width:4; stroke-linejoin:round; filter:drop-shadow(0 0 6px rgba(255,203,69,1)); pointer-events:none}
+.cw-peg{filter:drop-shadow(0 1px 1px rgba(0,0,0,.6))}
+.wheel-svg.classic .bulb{filter:drop-shadow(0 0 4px rgba(255,220,120,.95))}
+.wheel-svg.classic .bulb.b1{opacity:.7}
+/* The hub ring is drawn by the SVG now; the HTML hub only shows the landed ball. */
+.w-hub{width:30%; height:30%; background:radial-gradient(circle at 40% 30%, #17393b, #061416 78%); box-shadow:inset 0 3px 10px rgba(0,0,0,.6)}
+.w-hub-txt{font-size:26px}
+.w-gloss{inset:1%; background:radial-gradient(110% 60% at 50% -8%, rgba(255,255,255,.20), rgba(255,255,255,.04) 45%, transparent 58%)}
+.w-win{inset:7%; background:conic-gradient(from -4deg, rgba(255,255,255,.9) 0 8deg, transparent 8deg); mask:radial-gradient(circle, transparent 38%, #000 39%, #000 99%, transparent 100%)}
+.hub-ball{--s:calc(var(--w) * .27)}
