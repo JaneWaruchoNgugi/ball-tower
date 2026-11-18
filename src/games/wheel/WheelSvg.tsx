@@ -1,6 +1,6 @@
 import { memo } from 'react';
-import { GROUP_COLOR, letterOf } from '../../lib/bingo';
-import { SEGMENTS, SEG_DEG, type WheelBet } from './wheel';
+import { GROUP_COLOR } from '../../lib/bingo';
+import { PER_COLOUR, SEGMENTS, SEG_DEG, type WheelBet, wheelLetter } from './wheel';
 
 const R = 200;
 const C = 210;
@@ -17,11 +17,11 @@ function shade(hex: string, k: number): string {
 }
 
 /**
- * The 75-segment wheel, numbers 1–75 clockwise from the top, coloured by group.
+ * The 55-segment wheel, numbers 1–55 clockwise from the top, coloured by group.
  * Segments the player's bet covers stay bright and get a gold rim; the rest dim.
  */
 export const WheelSvg = memo(function WheelSvg({ bet }: { bet: WheelBet }) {
-  const covers = (n: number) => (bet.kind === 'colour' ? letterOf(n) === bet.pick : n === bet.pick);
+  const covers = (n: number) => (bet.kind === 'colour' ? wheelLetter(n) === bet.pick : n === bet.pick);
   return (
     <svg viewBox="-10 -10 440 440" className="wheel-svg" aria-hidden="true">
       <circle cx={C} cy={C} r={R + 8} fill="#0a1d1e" stroke="#ffcf3d" strokeWidth="3" />
@@ -31,7 +31,7 @@ export const WheelSvg = memo(function WheelSvg({ bet }: { bet: WheelBet }) {
         const a1 = a0 + SEG_DEG;
         const [x0, y0] = point(a0, R);
         const [x1, y1] = point(a1, R);
-        const base = GROUP_COLOR[letterOf(n)];
+        const base = GROUP_COLOR[wheelLetter(n)];
         const fill = shade(base, i % 2 ? 0.78 : 1);
         const mid = a0 + SEG_DEG / 2;
         const [tx, ty] = point(mid, R - 16);
@@ -62,7 +62,7 @@ export const WheelSvg = memo(function WheelSvg({ bet }: { bet: WheelBet }) {
         })()}
       {/* Group letters on the inner ring. */}
       {(['B', 'I', 'N', 'G', 'O'] as const).map((L, g) => {
-        const mid = (g * 15 + 7.5) * SEG_DEG;
+        const mid = (g * PER_COLOUR + PER_COLOUR / 2) * SEG_DEG;
         const [x, y] = point(mid, R * 0.62);
         return (
           <text key={L} x={x} y={y} transform={`rotate(${mid} ${x} ${y})`} className="w-letter">
