@@ -1,0 +1,437 @@
+/* Bingo Arcade — art direction
+   Night-time bingo hall: deep emerald lacquer, warm gold light, glossy ivory-faced balls.
+   The board (the game) is the lit stage; the console is a darker lacquer tray beneath or beside it.
+   One dark theme on purpose: it is a game table. */
+:root{
+  --ink:#04100f; --felt:#072023; --felt-2:#0c3134; --felt-3:#114146; --lacquer:#061416;
+  --line:rgba(255,255,255,.07); --line-2:rgba(255,255,255,.12);
+  --chalk:#f1f6ef; --muted:#93b3ab; --dim:#5f807a;
+  --gold:#ffcb45; --gold-2:#ff9f1c; --gold-deep:#a45f00;
+  --win:#33e08a; --win-deep:#0c7a45; --miss:#ff5d5d; --miss-deep:#8c1f2a;
+  --b:#4a5cff; --i:#ff2d6f; --n:#8a9896; --g:#1fd16a; --o:#ff9418;
+  --font-display:'Bungee', 'Arial Black', Impact, sans-serif;
+  --font-body:'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono:'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --ease-out:cubic-bezier(.2,.8,.2,1); --ease-back:cubic-bezier(.3,1.5,.5,1);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{background:var(--ink)}
+body{
+  margin:0; min-height:100svh; color:var(--chalk); font-family:var(--font-body); font-size:15px; line-height:1.4;
+  background:
+    radial-gradient(900px 520px at 50% -160px, rgba(255,203,69,.10), transparent 70%),
+    radial-gradient(1400px 900px at 50% 0%, var(--felt-2), var(--felt) 45%, var(--ink) 100%);
+  background-attachment:fixed;
+  -webkit-tap-highlight-color:transparent;
+}
+button{font:inherit; color:inherit; cursor:pointer; border:0; background:none; padding:0}
+button:disabled{cursor:default}
+:focus-visible{outline:2px solid var(--gold); outline-offset:2px}
+.sr-only{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+
+.wrap{max-width:1240px; margin:0 auto; padding:max(10px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) 28px max(12px, env(safe-area-inset-left)); display:flex; flex-direction:column; gap:10px}
+footer{color:var(--dim); font-size:12px; text-align:center; padding-top:6px}
+
+/* ---------- header ---------- */
+.top{display:flex; align-items:center; justify-content:space-between; gap:10px; height:46px}
+.logo{display:flex; align-items:center; gap:9px; font-family:var(--font-display); line-height:1}
+.logo-ball{width:34px; height:34px; border-radius:50%; display:grid; place-items:center; font-size:12px; color:#1a1200;
+  background:radial-gradient(circle at 34% 28%, #fff7d6 0 9%, var(--gold) 34%, var(--gold-2) 70%, var(--gold-deep));
+  box-shadow:0 0 18px rgba(255,203,69,.35), inset -3px -4px 8px rgba(0,0,0,.25)}
+.logo-txt{font-size:19px; letter-spacing:.03em; display:flex; flex-direction:column}
+.logo-txt em{font-style:normal; font-size:10.5px; letter-spacing:.42em; color:var(--gold); margin-top:3px}
+.top-right{display:flex; align-items:center; gap:6px}
+.wallet{position:relative; display:flex; align-items:baseline; gap:6px; height:38px; padding:0 14px; border-radius:999px;
+  background:linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.2)); box-shadow:inset 0 0 0 1px var(--line-2), inset 0 1px 0 rgba(255,255,255,.05); align-items:center; transition:box-shadow .3s}
+.wallet .cur{font-size:11px; color:var(--muted); letter-spacing:.08em}
+.wallet .bal{font-family:var(--font-mono); font-weight:600; font-variant-numeric:tabular-nums; font-size:16px}
+.wallet.up{box-shadow:inset 0 0 0 1px var(--win), 0 0 22px rgba(51,224,138,.35)}
+.wallet.up .bal{color:#b9ffd8}
+.wallet.down .bal{color:#ffd0d0}
+.wdelta{position:absolute; right:12px; top:100%; font-family:var(--font-mono); font-weight:600; font-size:13px; color:var(--win); animation:floatUp 1.8s var(--ease-out) forwards; pointer-events:none; white-space:nowrap}
+@keyframes floatUp{0%{opacity:0; transform:translateY(6px)} 15%{opacity:1} 100%{opacity:0; transform:translateY(-34px)}}
+.icon-btn{width:38px; height:38px; border-radius:50%; display:grid; place-items:center; color:var(--muted); background:rgba(0,0,0,.25); box-shadow:inset 0 0 0 1px var(--line-2); transition:color .15s, transform .15s}
+.icon-btn:hover{color:var(--chalk)} .icon-btn:active{transform:scale(.92)}
+.icon-btn[aria-pressed="true"]{color:var(--miss)}
+.menu-wrap{position:relative}
+.menu{position:absolute; right:0; top:46px; z-index:40; width:260px; padding:10px; border-radius:16px; background:#0a1f22; box-shadow:0 20px 50px rgba(0,0,0,.6), inset 0 0 0 1px var(--line-2); animation:pop .18s var(--ease-out)}
+.menu-head{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); padding:4px 6px 8px}
+.menu-row{display:flex; justify-content:space-between; align-items:center; padding:9px 6px; font-size:14px; cursor:pointer}
+.switch{position:relative; width:40px; height:24px}
+.switch input{position:absolute; inset:0; opacity:0; margin:0; cursor:pointer}
+.switch span{position:absolute; inset:0; border-radius:99px; background:#24403f; transition:background .2s; pointer-events:none}
+.switch span::after{content:""; position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:50%; background:#cfdcd8; transition:transform .2s var(--ease-back)}
+.switch input:checked + span{background:var(--win-deep)}
+.switch input:checked + span::after{transform:translateX(16px); background:#fff}
+.switch input:focus-visible + span{outline:2px solid var(--gold); outline-offset:2px}
+.menu-btn{width:100%; margin-top:6px; padding:11px; border-radius:10px; font-size:13.5px; background:rgba(255,255,255,.05); box-shadow:inset 0 0 0 1px var(--line-2)}
+.menu-btn:hover{background:rgba(255,255,255,.09)}
+.menu-note{margin:8px 6px 2px; font-size:12px; color:var(--dim)}
+@keyframes pop{from{opacity:0; transform:translateY(-6px) scale(.97)}}
+
+/* ---------- game switcher ---------- */
+.game-tabs{display:grid; grid-template-columns:repeat(3,1fr); gap:4px; padding:4px; border-radius:14px; background:rgba(0,0,0,.28); box-shadow:inset 0 0 0 1px var(--line)}
+.game-tabs a{display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:40px; padding:6px 4px; border-radius:10px; text-decoration:none; color:var(--muted); text-align:center; transition:color .2s, background .2s}
+.game-tabs a b{font-family:var(--font-display); font-weight:400; font-size:12.5px; letter-spacing:.02em; line-height:1.1}
+.game-tabs a b.long{display:none}
+.game-tabs a small{display:none; font-size:12px; margin-top:3px; color:var(--dim)}
+.game-tabs a:hover{color:var(--chalk)}
+.game-tabs a[aria-current="page"]{color:#201500; background:linear-gradient(180deg, #ffd96a, var(--gold) 45%, var(--gold-2)); box-shadow:0 4px 16px rgba(255,170,30,.28), inset 0 1px 0 rgba(255,255,255,.5)}
+.game-tabs a[aria-current="page"] small{color:rgba(32,21,0,.7)}
+
+/* ---------- game layout ---------- */
+.game{display:flex; flex-direction:column; gap:10px; animation:enter .45s var(--ease-out)}
+@keyframes enter{from{opacity:0; transform:translateY(10px)}}
+.board{position:relative; isolation:isolate; overflow:hidden; border-radius:22px; padding:10px 12px 12px; display:flex; flex-direction:column; gap:8px;
+  background:
+    radial-gradient(120% 70% at 50% 0%, rgba(255,203,69,.10), transparent 60%),
+    radial-gradient(90% 80% at 50% 55%, var(--felt-3), var(--felt) 70%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08), inset 0 0 0 1px var(--line), inset 0 -40px 60px rgba(0,0,0,.35), 0 20px 50px rgba(0,0,0,.35)}
+.board::before{content:""; position:absolute; inset:0; z-index:-1; opacity:.5; pointer-events:none;
+  background-image:radial-gradient(rgba(255,255,255,.035) 1px, transparent 1.2px); background-size:14px 14px}
+.console{display:flex; flex-direction:column; gap:9px; padding:12px; border-radius:20px;
+  background:linear-gradient(180deg, #0a1d20, var(--lacquer)); box-shadow:inset 0 1px 0 rgba(255,255,255,.05), inset 0 0 0 1px var(--line)}
+.console-head{display:flex; align-items:center; justify-content:space-between; gap:8px; min-height:34px}
+.console-head > span{font-family:var(--font-display); font-size:13px; letter-spacing:.04em; color:var(--muted)}
+.info-btn{display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 12px; border-radius:99px; font-size:13px; color:var(--muted); box-shadow:inset 0 0 0 1px var(--line-2)}
+.info-btn:hover{color:var(--chalk)}
+
+/* ---------- result banner (fixed height: nothing shifts) ---------- */
+.result-slot{height:48px; position:relative; z-index:3}
+.result{height:48px; display:flex; align-items:center; gap:10px; padding:0 14px 0 8px; border-radius:14px; animation:slideIn .35s var(--ease-back)}
+.result.idle{justify-content:center; padding:0 12px; color:var(--muted); font-size:14px; background:rgba(0,0,0,.18); animation:fade .3s}
+.result.win{background:linear-gradient(90deg, rgba(51,224,138,.24), rgba(51,224,138,.06)); box-shadow:inset 0 0 0 1px rgba(51,224,138,.5), 0 0 30px rgba(51,224,138,.15)}
+.result.lose{background:linear-gradient(90deg, rgba(255,93,93,.2), rgba(255,93,93,.05)); box-shadow:inset 0 0 0 1px rgba(255,93,93,.42)}
+.r-icon{flex:none; width:32px; height:32px; border-radius:50%; display:grid; place-items:center; color:#04100f}
+.win .r-icon{background:var(--win); box-shadow:0 0 16px rgba(51,224,138,.6)}
+.lose .r-icon{background:var(--miss)}
+.r-text{flex:1; min-width:0; display:flex; flex-direction:column; line-height:1.15}
+.r-text b{font-family:var(--font-display); font-weight:400; font-size:14.5px; letter-spacing:.01em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.r-text small{font-size:12.5px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.r-amt{font-family:var(--font-mono); font-weight:600; font-size:15px; white-space:nowrap; font-variant-numeric:tabular-nums}
+.win .r-amt{color:var(--win)} .lose .r-amt{color:#ff9a9a}
+@keyframes slideIn{from{opacity:0; transform:translateY(-10px) scale(.98)}}
+@keyframes fade{from{opacity:0}}
+
+/* ---------- bingo ball ---------- */
+.ball{--s:56px; position:relative; flex:none; width:var(--s); height:var(--s); border-radius:50%; display:grid; place-items:center;
+  background:
+    radial-gradient(circle at 32% 26%, rgba(255,255,255,.75) 0 6%, rgba(255,255,255,0) 22%),
+    radial-gradient(circle at 50% 50%, var(--c) 0 55%, color-mix(in srgb, var(--c) 55%, #000) 100%);
+  box-shadow:inset -4px -6px 12px rgba(0,0,0,.35), inset 3px 3px 6px rgba(255,255,255,.18), 0 6px 14px rgba(0,0,0,.4)}
+.ball-face{width:64%; height:64%; border-radius:50%; background:radial-gradient(circle at 40% 35%, #fff, #e9eee9 70%, #cfd6cf); display:flex; flex-direction:column; align-items:center; justify-content:center; color:#0b1414; box-shadow:inset 0 -2px 3px rgba(0,0,0,.15)}
+.ball-face small{font-family:var(--font-display); font-size:calc(var(--s) * .14); line-height:1; color:color-mix(in srgb, var(--c) 80%, #000)}
+.ball-face b{font-family:var(--font-display); font-weight:400; font-size:calc(var(--s) * .27); line-height:1; letter-spacing:-.02em}
+
+/* ---------- shared console controls ---------- */
+.betbox{display:flex; flex-direction:column; gap:7px}
+.betbox .lbl{display:none}
+.box{display:flex; align-items:center; height:46px; border-radius:14px; background:rgba(0,0,0,.35); box-shadow:inset 0 0 0 1px var(--line-2), inset 0 2px 6px rgba(0,0,0,.35)}
+.box .cur{font-size:12px; color:var(--muted); padding-left:6px}
+.box input{flex:1; min-width:0; height:100%; border:0; background:none; color:var(--chalk); font-family:var(--font-mono); font-weight:600; font-size:19px; text-align:center; font-variant-numeric:tabular-nums}
+.box input:focus{outline:none}
+.box:focus-within{box-shadow:inset 0 0 0 1.5px var(--gold)}
+.step{width:46px; height:46px; display:grid; place-items:center; font-size:22px; color:var(--chalk); border-radius:14px; transition:background .15s, transform .1s}
+.step:hover:not(:disabled){background:rgba(255,255,255,.06)} .step:active:not(:disabled){transform:scale(.9)}
+.chips{display:grid; grid-template-columns:repeat(6,1fr); gap:5px}
+.chips button{height:34px; border-radius:10px; font-family:var(--font-mono); font-size:13px; font-weight:600; color:var(--muted); background:rgba(255,255,255,.04); box-shadow:inset 0 0 0 1px var(--line); transition:all .15s}
+.chips button:hover:not(:disabled){color:var(--chalk); background:rgba(255,255,255,.08)}
+.chips button:active:not(:disabled){transform:scale(.94)}
+.chips button.on{color:#201500; background:var(--gold); box-shadow:none}
+.chips.rounds{grid-template-columns:repeat(4,1fr)}
+.chips.rounds small{font-family:var(--font-body); font-weight:400; font-size:11px; opacity:.75}
+button:disabled{opacity:.45}
+.play:disabled, .chips button.on:disabled{opacity:.6}
+.seg{display:grid; grid-template-columns:1fr 1fr; gap:5px}
+.seg button{height:40px; border-radius:12px; font-weight:700; font-size:14px; color:var(--muted); background:rgba(255,255,255,.04); box-shadow:inset 0 0 0 1px var(--line); transition:all .18s}
+.seg button em{font-style:normal; font-family:var(--font-mono); font-size:12.5px; margin-left:4px; opacity:.8}
+.seg button[aria-selected="true"]{color:var(--chalk); background:linear-gradient(180deg, rgba(255,203,69,.18), rgba(255,203,69,.06)); box-shadow:inset 0 0 0 1.5px var(--gold)}
+.mode{position:relative; display:grid; grid-template-columns:1fr 1fr; width:170px; height:34px; padding:3px; border-radius:99px; background:rgba(0,0,0,.35); box-shadow:inset 0 0 0 1px var(--line)}
+.mode-ind{position:absolute; top:3px; bottom:3px; left:3px; width:calc(50% - 3px); border-radius:99px; background:var(--felt-3); box-shadow:inset 0 0 0 1px var(--line-2); transition:transform .25s var(--ease-out)}
+.mode[data-on="auto"] .mode-ind{transform:translateX(100%)}
+.mode button{position:relative; font-size:13px; font-weight:700; color:var(--muted)}
+.mode button[aria-selected="true"]{color:var(--chalk)}
+.stats{display:grid; grid-template-columns:repeat(3,1fr); gap:5px}
+.stats div{padding:7px 10px; border-radius:12px; background:rgba(0,0,0,.25); display:flex; flex-direction:column}
+.stats small{font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--dim)}
+.stats b{font-family:var(--font-mono); font-size:15px; font-variant-numeric:tabular-nums; white-space:nowrap}
+.err{margin:0; min-height:0; font-size:13px; color:#ff9a9a}
+.err:empty{display:none}
+
+/* Primary action: polished gold, with a light sweep on hover and a real press. */
+.play{position:relative; overflow:hidden; width:100%; min-height:58px; border-radius:16px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; padding:6px 12px;
+  color:#221600; background:linear-gradient(180deg, #ffe07a 0%, var(--gold) 38%, var(--gold-2) 100%);
+  box-shadow:0 5px 0 var(--gold-deep), 0 12px 26px rgba(255,160,20,.28), inset 0 1px 0 rgba(255,255,255,.6);
+  transition:transform .1s, box-shadow .1s, filter .2s}
+.play::after{content:""; position:absolute; top:0; bottom:0; width:40%; left:-60%; background:linear-gradient(100deg, transparent, rgba(255,255,255,.45), transparent); transform:skewX(-18deg); transition:left .6s var(--ease-out); pointer-events:none}
+.play:hover:not(:disabled)::after{left:120%}
+.play:active:not(:disabled){transform:translateY(4px); box-shadow:0 1px 0 var(--gold-deep), 0 6px 14px rgba(255,160,20,.25), inset 0 1px 0 rgba(255,255,255,.6)}
+.play:disabled{filter:saturate(.4) brightness(.8)}
+.pl-main{font-family:var(--font-display); font-size:19px; letter-spacing:.04em; line-height:1}
+.pl-sub{font-size:12.5px; font-weight:700; opacity:.75; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%}
+.play.cash{color:#03170c; background:linear-gradient(180deg, #8cffc4, var(--win) 45%, #17b765); box-shadow:0 5px 0 var(--win-deep), 0 12px 26px rgba(51,224,138,.3), inset 0 1px 0 rgba(255,255,255,.6)}
+.play.cash:not(:disabled){animation:breathe 1.6s ease-in-out infinite}
+.play.stop{color:#fff; background:linear-gradient(180deg, #ff8a7a, var(--miss) 50%, #d63a45); box-shadow:0 5px 0 var(--miss-deep), inset 0 1px 0 rgba(255,255,255,.45)}
+.play.slim{min-height:48px}
+@keyframes breathe{50%{box-shadow:0 5px 0 var(--win-deep), 0 12px 34px rgba(51,224,138,.55), inset 0 1px 0 rgba(255,255,255,.6)}}
+.btn-pair{display:grid; grid-template-columns:96px 1fr; gap:8px}
+.btn-alt{border-radius:16px; font-weight:700; font-size:14px; color:var(--chalk); background:rgba(255,255,255,.06); box-shadow:inset 0 0 0 1px var(--line-2); transition:transform .1s}
+.btn-alt:active{transform:scale(.95)}
+
+/* ---------- history strip ---------- */
+.hist{display:flex; align-items:center; gap:10px; min-height:38px}
+.hist > small{flex:none; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--dim)}
+.hist-row{flex:1; min-width:0; display:flex; gap:6px; overflow:hidden; mask-image:linear-gradient(90deg, #000 85%, transparent)}
+.hist-row .ball{--s:32px; box-shadow:inset -2px -3px 6px rgba(0,0,0,.35), 0 2px 5px rgba(0,0,0,.35)}
+.hist-row .ball:first-child, .hist-tot:first-child{animation:histIn .4s var(--ease-back)}
+.hist-row .ball.hit{outline:2px solid var(--win); outline-offset:1px}
+.hist-empty{font-size:13px; color:var(--dim)}
+.hist-tot{flex:none; min-width:40px; height:30px; padding:0 8px; border-radius:9px; display:grid; place-items:center; font-family:var(--font-mono); font-weight:600; font-size:13.5px}
+.hist-tot.win{color:var(--win); background:rgba(51,224,138,.12); box-shadow:inset 0 0 0 1px rgba(51,224,138,.35)}
+.hist-tot.lose{color:var(--muted); background:rgba(255,255,255,.04)}
+@keyframes histIn{from{opacity:0; transform:translateX(-14px) scale(.6)}}
+
+/* ---------- win sparks ---------- */
+.burst{position:absolute; left:50%; top:50%; z-index:6; pointer-events:none}
+.burst i{position:absolute; left:0; top:0; width:var(--sz); height:var(--sz); border-radius:50%; background:radial-gradient(circle, #fff6c8, var(--gold) 60%, transparent 70%); opacity:0; animation:spark 1s var(--ease-out) forwards}
+@keyframes spark{0%{opacity:1; transform:translate(-50%,-50%) scale(.4)} 70%{opacity:1} 100%{opacity:0; transform:translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(1)}}
+
+/* ---------- rules sheet ---------- */
+.sheet-back{position:fixed; inset:0; z-index:60; display:flex; align-items:flex-end; justify-content:center; background:rgba(2,8,8,.66); backdrop-filter:blur(3px); animation:fade .2s}
+.sheet{width:min(520px, 100%); max-height:86svh; overflow:auto; padding:20px 18px max(18px, env(safe-area-inset-bottom)); border-radius:22px 22px 0 0; background:#0a1f22; box-shadow:0 -20px 50px rgba(0,0,0,.5), inset 0 0 0 1px var(--line-2); animation:sheetUp .3s var(--ease-out)}
+.sheet h2{margin:0 0 10px; font-family:var(--font-display); font-weight:400; font-size:18px; color:var(--gold)}
+.sheet-body p{margin:0 0 10px; color:#cfe0da}
+.sheet-body .fine{font-size:13px; color:var(--muted)}
+.pay{width:100%; border-collapse:collapse; margin:4px 0 12px; font-size:14px}
+.pay th{text-align:left; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--dim); font-weight:500; padding:4px 6px}
+.pay td{padding:6px; border-top:1px solid var(--line); font-variant-numeric:tabular-nums}
+.pay td:nth-child(2){font-family:var(--font-mono)}
+@keyframes sheetUp{from{transform:translateY(40px); opacity:0}}
+@media (min-width:700px){ .sheet-back{align-items:center} .sheet{border-radius:22px} }
+
+/* =====================================================================
+   BALL TOWER
+   ===================================================================== */
+.hud{display:grid; grid-template-columns:1fr auto 1fr; align-items:end; padding:0 4px}
+.hud small{display:block; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--dim)}
+.hud-item b{font-family:var(--font-mono); font-size:16px; font-weight:600}
+.hud-item b i{font-style:normal; color:var(--dim); font-size:13px}
+.hud-item.right{text-align:right}
+.hud-mult{text-align:center}
+.hud-mult b{display:inline-block; font-family:var(--font-display); font-weight:400; font-size:32px; line-height:1; color:var(--chalk); font-variant-numeric:tabular-nums; animation:multPop .45s var(--ease-back)}
+.hud-mult.live b{color:var(--gold); text-shadow:0 0 22px rgba(255,203,69,.45)}
+@keyframes multPop{0%{transform:scale(.8)} 60%{transform:scale(1.12)}}
+
+.tower{--rh:clamp(32px, calc((100svh - 480px) / 10), 44px); display:flex; flex-direction:column; gap:4px; flex:1; justify-content:center}
+.t-row{position:relative; display:grid; grid-template-columns:62px 1fr; align-items:center; gap:8px; height:var(--rh); padding-right:2px; border-radius:12px; animation:rowIn .4s var(--ease-out) backwards; animation-delay:var(--d)}
+@keyframes rowIn{from{opacity:0; transform:translateY(10px)}}
+.t-mult{display:flex; align-items:center; justify-content:flex-end; gap:3px; font-family:var(--font-mono); font-weight:600; font-size:13px; color:var(--dim); padding-right:4px; transition:color .3s}
+.t-cells{display:grid; grid-template-columns:repeat(3,1fr); gap:6px; height:100%}
+.t-cell{position:relative; height:100%; border-radius:11px; display:grid; place-items:center; perspective:400px;
+  background:linear-gradient(180deg, rgba(0,0,0,.22), rgba(0,0,0,.34)); box-shadow:inset 0 0 0 1px var(--line); transition:background .2s, box-shadow .2s, transform .12s}
+.t-cell:disabled{opacity:1}
+.t-inner{display:grid; place-items:center; height:100%}
+.sealed{width:calc(var(--rh) - 8px); height:calc(var(--rh) - 8px); border-radius:50%; display:grid; place-items:center; color:rgba(255,203,69,.55);
+  background:radial-gradient(circle at 32% 26%, rgba(255,255,255,.28) 0 6%, transparent 24%), radial-gradient(circle, #1d3a3c, #0a1a1b 80%);
+  box-shadow:inset 0 0 0 1.5px rgba(255,203,69,.25), inset -3px -4px 8px rgba(0,0,0,.5); transition:transform .2s var(--ease-back), color .2s}
+.t-cell .ball{--s:calc(var(--rh) - 6px)}
+.blk{width:calc(var(--rh) - 6px); height:calc(var(--rh) - 6px); border-radius:50%; display:grid; place-items:center; color:#fff;
+  background:radial-gradient(circle at 32% 26%, rgba(255,255,255,.45) 0 6%, transparent 22%), radial-gradient(circle, #ff6b6b, #a3162a 85%);
+  box-shadow:inset -3px -4px 8px rgba(0,0,0,.35), 0 0 16px rgba(255,93,93,.5)}
+
+/* The row you play now: gold rails and hoverable sealed balls. */
+.t-row.active{background:linear-gradient(90deg, transparent, rgba(255,203,69,.10) 30%, rgba(255,203,69,.10) 70%, transparent)}
+.t-row.active .t-mult{color:var(--gold)}
+.t-row.active .t-cell{box-shadow:inset 0 0 0 1.5px rgba(255,203,69,.55), 0 0 18px rgba(255,203,69,.12); animation:activePulse 1.6s ease-in-out infinite}
+.t-row.active .sealed{color:var(--gold)}
+.t-row.active .t-cell:hover .sealed{transform:scale(1.12) translateY(-2px)}
+.t-row.active .t-cell:active{transform:scale(.94)}
+@keyframes activePulse{50%{box-shadow:inset 0 0 0 1.5px rgba(255,203,69,.9), 0 0 24px rgba(255,203,69,.25)}}
+.t-row.cleared .t-mult{color:var(--win)}
+.t-row.cleared .t-cell.picked{background:rgba(51,224,138,.12); box-shadow:inset 0 0 0 1.5px rgba(51,224,138,.55)}
+.t-row.lost .t-cell.picked{background:rgba(255,93,93,.16); box-shadow:inset 0 0 0 1.5px var(--miss); animation:shake .45s}
+.t-row.lost .t-mult{color:var(--miss)}
+@keyframes shake{20%,60%{transform:translateX(-5px)} 40%,80%{transform:translateX(5px)}}
+
+/* Reveals: the picked ball flips in now; at the end the rest of the tower flips in, row by row. */
+.t-cell.open .t-inner{animation:flipIn .45s var(--ease-back) backwards}
+.t-cell.picked .t-inner{animation-delay:0ms}
+.tower-board.lost .t-cell.open:not(.picked) .t-inner, .tower-board.cashed .t-cell.open:not(.picked) .t-inner{animation-delay:calc(250ms + var(--rd))}
+.tower-board.lost .t-cell.open:not(.picked), .tower-board.cashed .t-cell.open:not(.picked){opacity:.55}
+@keyframes flipIn{from{transform:rotateY(90deg) scale(.7); opacity:0}}
+.tower-board.lost{box-shadow:inset 0 1px 0 rgba(255,255,255,.08), inset 0 0 0 1.5px rgba(255,93,93,.45), inset 0 -40px 60px rgba(0,0,0,.35)}
+.tower-board.cashed{box-shadow:inset 0 1px 0 rgba(255,255,255,.08), inset 0 0 0 1.5px rgba(51,224,138,.5), inset 0 -40px 60px rgba(0,0,0,.35), 0 0 40px rgba(51,224,138,.12)}
+.tower-board.idle .t-row{opacity:.8}
+
+/* =====================================================================
+   LUCKY WHEEL 75
+   ===================================================================== */
+.wheel-stage{flex:1; display:grid; place-items:center; min-height:0}
+.wheel-wrap{--w:min(78vw, 300px); position:relative; width:var(--w); height:var(--w)}
+.w-glow{position:absolute; inset:-8%; border-radius:50%; background:radial-gradient(circle, rgba(255,203,69,.16), transparent 65%); transition:opacity .4s; z-index:-1}
+.wheel-board.spinning .w-glow{opacity:1; animation:glowPulse 1s ease-in-out infinite}
+@keyframes glowPulse{50%{opacity:.55}}
+.wheel{width:100%; height:100%; border-radius:50%; will-change:transform; filter:drop-shadow(0 14px 26px rgba(0,0,0,.55))}
+.wheel-svg{display:block; width:100%; height:100%}
+.w-num{font-family:var(--font-mono); font-weight:600; font-size:10px; fill:#fff; text-anchor:middle; dominant-baseline:central; paint-order:stroke; stroke:rgba(0,0,0,.35); stroke-width:1.6px}
+.w-letter{font-family:var(--font-display); font-size:22px; fill:rgba(255,255,255,.92); text-anchor:middle; dominant-baseline:central; paint-order:stroke; stroke:rgba(0,0,0,.3); stroke-width:3px}
+.w-pointer{position:absolute; left:50%; top:-10px; z-index:4; width:26px; height:34px; margin-left:-13px; transform-origin:50% 8px;
+  background:linear-gradient(180deg, #fff1b8, var(--gold) 50%, var(--gold-2)); clip-path:polygon(0 0, 100% 0, 50% 100%); filter:drop-shadow(0 3px 4px rgba(0,0,0,.6))}
+.w-pointer.flick{animation:flick .12s ease-out}
+@keyframes flick{40%{transform:rotate(-16deg)}}
+/* Glowing wedge marking the landed segment, under the pointer. */
+.w-win{position:absolute; inset:0; z-index:3; border-radius:50%; pointer-events:none; opacity:0;
+  background:conic-gradient(from -2.4deg, rgba(255,255,255,.9) 0 4.8deg, transparent 4.8deg); mask:radial-gradient(circle, transparent 40%, #000 41%, #000 96%, transparent 96.5%); transition:opacity .3s}
+.w-win.win{opacity:.55; animation:wedge 1.2s ease-in-out 2}
+.w-win.lose{opacity:.3}
+@keyframes wedge{50%{opacity:.85}}
+.w-hub{position:absolute; left:50%; top:50%; width:38%; height:38%; transform:translate(-50%,-50%); z-index:5; border-radius:50%; display:grid; place-items:center;
+  background:radial-gradient(circle at 40% 30%, #17393b, #071617 80%); box-shadow:0 0 0 3px rgba(255,203,69,.55), 0 8px 18px rgba(0,0,0,.55), inset 0 2px 6px rgba(255,255,255,.08)}
+.w-hub-txt{font-family:var(--font-display); font-size:26px; color:var(--gold); opacity:.85}
+.hub-ball{--s:calc(var(--w) * .32); animation:hubPop .55s var(--ease-back)}
+@keyframes hubPop{from{transform:scale(.2) rotate(-90deg); opacity:0}}
+
+.colour-picks{display:grid; grid-template-columns:repeat(5,1fr); gap:5px}
+.colour-picks button{height:52px; border-radius:12px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px;
+  background:linear-gradient(180deg, color-mix(in srgb, var(--c) 26%, transparent), color-mix(in srgb, var(--c) 10%, transparent)); box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--c) 40%, transparent); transition:transform .12s, box-shadow .2s}
+.colour-picks b{font-family:var(--font-display); font-weight:400; font-size:19px; line-height:1}
+.colour-picks small{font-family:var(--font-mono); font-size:11px; color:var(--muted)}
+.colour-picks button[aria-checked="true"]{background:linear-gradient(180deg, color-mix(in srgb, var(--c) 70%, #fff 0%), color-mix(in srgb, var(--c) 55%, #000)); box-shadow:inset 0 0 0 2px #fff, 0 0 18px color-mix(in srgb, var(--c) 60%, transparent)}
+.colour-picks button[aria-checked="true"] small{color:#fff}
+.colour-picks button:active:not(:disabled){transform:scale(.93)}
+.num-strip{display:flex; gap:5px; overflow-x:auto; scroll-snap-type:x proximity; padding:3px 2px 6px; scrollbar-width:thin; overscroll-behavior-x:contain}
+.num-strip button{flex:none; width:44px; height:44px; border-radius:50%; scroll-snap-align:center; font-family:var(--font-mono); font-weight:600; font-size:14px;
+  background:color-mix(in srgb, var(--c) 18%, transparent); box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--c) 55%, transparent); transition:transform .12s}
+.num-strip button[aria-checked="true"]{color:#0b1414; background:radial-gradient(circle at 40% 35%, #fff, #e3e9e3); box-shadow:0 0 0 3px var(--c), 0 0 16px var(--c)}
+
+/* =====================================================================
+   BINGO DICE
+   ===================================================================== */
+.dice-stage{position:relative; flex:1; display:flex; align-items:center; justify-content:center; gap:14px; min-height:150px}
+.dice-balls{display:flex; align-items:center; gap:8px}
+.d-slot{display:grid; place-items:center}
+.dice-balls .ball{--s:clamp(78px, 22vw, 120px)}
+.op{font-family:var(--font-display); font-size:22px; color:var(--dim)}
+.ball.tumble{animation:tumble .32s linear infinite; filter:blur(.6px)}
+.ball.tumble.b2{animation-duration:.28s; animation-direction:reverse}
+@keyframes tumble{0%{transform:translateY(0) rotate(0)} 25%{transform:translateY(-8px) rotate(90deg)} 50%{transform:translateY(0) rotate(180deg)} 75%{transform:translateY(-5px) rotate(270deg)} 100%{transform:translateY(0) rotate(360deg)}}
+.ball.drop{animation:drop .55s var(--ease-back)}
+.ball.drop.b2{animation-delay:.08s}
+@keyframes drop{0%{transform:translateY(-18px) scale(.9)} 60%{transform:translateY(3px) scale(1.04)}}
+.d-total{display:flex; flex-direction:column; align-items:center; min-width:92px; padding:8px 12px; border-radius:18px; background:rgba(0,0,0,.28); box-shadow:inset 0 0 0 1px var(--line-2); transition:box-shadow .3s, background .3s}
+.d-total small{font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--dim)}
+.d-total b{font-family:var(--font-display); font-weight:400; font-size:clamp(34px, 9vw, 48px); line-height:1.05; font-variant-numeric:tabular-nums}
+.d-total.win{background:rgba(51,224,138,.14); box-shadow:inset 0 0 0 1.5px var(--win), 0 0 30px rgba(51,224,138,.25)}
+.d-total.win b{color:var(--win)}
+.d-total.lose b{color:#ffb0b0}
+.d-total.lose{box-shadow:inset 0 0 0 1.5px rgba(255,93,93,.5)}
+
+.track-wrap{position:relative; padding:4px 14px 0}
+.track{position:relative; height:14px; border-radius:99px; background:rgba(255,93,93,.18); box-shadow:inset 0 1px 3px rgba(0,0,0,.5)}
+.zone{position:absolute; top:0; bottom:0; border-radius:99px; background:linear-gradient(90deg, #22c374, var(--win)); box-shadow:0 0 14px rgba(51,224,138,.35); transition:left .2s var(--ease-out), right .2s var(--ease-out)}
+.hit{position:absolute; top:50%; width:22px; height:22px; margin:-11px 0 0 -11px; border-radius:50%; border:3px solid #fff; background:var(--miss); box-shadow:0 2px 8px rgba(0,0,0,.6); animation:hitIn .6s var(--ease-back)}
+.hit.win{background:var(--win)}
+@keyframes hitIn{from{transform:scale(0)} }
+.tslider{position:absolute; left:14px; right:14px; top:-2px; width:calc(100% - 28px); height:26px; margin:0; background:none; -webkit-appearance:none; appearance:none; cursor:pointer}
+.tslider::-webkit-slider-runnable-track{height:26px; background:none}
+.tslider::-moz-range-track{height:26px; background:none}
+.tslider::-webkit-slider-thumb{-webkit-appearance:none; width:30px; height:30px; margin-top:-2px; border-radius:9px; background:linear-gradient(180deg, #ffe07a, var(--gold) 45%, var(--gold-2)); box-shadow:0 3px 8px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.6)}
+.tslider::-moz-range-thumb{width:30px; height:30px; border:0; border-radius:9px; background:linear-gradient(180deg, #ffe07a, var(--gold) 45%, var(--gold-2)); box-shadow:0 3px 8px rgba(0,0,0,.55)}
+.tslider:disabled{cursor:default}
+.track-ends{position:relative; display:flex; justify-content:space-between; margin-top:8px; font-family:var(--font-mono); font-size:12px; color:var(--dim); height:16px}
+.t-target{position:absolute; transform:translateX(-50%); color:var(--gold); font-weight:600}
+
+/* =====================================================================
+   LARGER SCREENS: the board takes the stage, the console sits beside it.
+   ===================================================================== */
+@media (min-width:600px){
+  .wrap{padding-top:16px; gap:14px}
+  .game-tabs{grid-template-columns:repeat(3, minmax(0, 240px)); justify-content:start}
+  .game-tabs a small{display:block}
+  .game-tabs a b.long{display:block} .game-tabs a b.short{display:none}
+  .game-tabs a{min-height:52px}
+  .board{padding:14px 18px 16px}
+  .betbox .lbl{display:block; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--dim)}
+  .wheel-wrap{--w:min(60vw, 380px)}
+  .w-num{font-size:9.5px}
+}
+@media (min-width:960px){
+  .game{display:grid; grid-template-columns:minmax(0,1fr) 360px; align-items:stretch; gap:16px}
+  .board{min-height:min(calc(100svh - 170px), 720px); padding:18px 24px 18px}
+  .console{padding:18px; gap:12px; align-self:start; position:sticky; top:16px}
+  .tower{--rh:clamp(38px, calc((100svh - 400px) / 10), 54px); max-width:560px; width:100%; margin:0 auto}
+  .t-row{grid-template-columns:78px 1fr}
+  .t-mult{font-size:15px}
+  .hud{max-width:560px; width:100%; margin:0 auto}
+  .hud-mult b{font-size:40px}
+  .wheel-wrap{--w:min(calc(100svh - 330px), 470px)}
+  .w-num{font-size:9px}
+  .dice-balls .ball{--s:clamp(132px, 14vw, 170px)}
+  .d-total{min-width:150px; padding:14px 22px}
+  .d-total b{font-size:68px}
+  .dice-stage{gap:32px}
+  .dice-stage::before{content:""; position:absolute; inset:10% 15%; z-index:-1; border-radius:50%; background:radial-gradient(closest-side, rgba(255,203,69,.10), transparent)}
+  .op{font-size:30px}
+  .track-wrap{padding:6px 30px 0} .tslider{left:30px; right:30px; width:calc(100% - 60px)}
+  .result-slot, .result{height:54px}
+}
+@media (max-width:370px){
+  .logo-txt{font-size:16px} .wallet{padding:0 10px} .wallet .bal{font-size:14.5px}
+  .chips{grid-template-columns:repeat(3,1fr)}
+  .dice-balls .ball{--s:70px}
+  .pl-sub{font-size:11.5px}
+}
+@media (prefers-reduced-motion:reduce){
+  *, *::before, *::after{animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important}
+}
+
+/* =====================================================================
+   PHONES: everything needed for a round fits on one screen, no scrolling.
+   Sizes follow the viewport height (svh) so short Androids and tall iPhones both fit.
+   ===================================================================== */
+@media (max-width:599px){
+  .wrap{gap:8px; padding-top:max(8px, env(safe-area-inset-top))}
+  .top{height:40px}
+  .logo-ball{width:30px; height:30px; font-size:11px}
+  .logo-txt{font-size:17px} .logo-txt em{font-size:9.5px}
+  .wallet{height:34px} .icon-btn{width:34px; height:34px}
+  .game-tabs a{min-height:36px; padding:4px}
+  .game{gap:8px}
+  .board{padding:8px 10px 10px; gap:6px; border-radius:18px}
+  .result-slot, .result{height:42px}
+  .r-text b{font-size:13.5px}
+  .console{padding:10px; gap:7px; border-radius:18px}
+  .console-head{min-height:30px}
+  .console-head > span{display:none}
+  .console-head:has(> span:first-child){justify-content:flex-end}
+  .info-btn, .mode{height:30px}
+  .box, .step{height:42px}
+  .chips button{height:30px}
+  .seg button{height:36px}
+  .colour-picks button{height:46px}
+  .num-strip button{width:40px; height:40px}
+  .stats div{padding:5px 9px}
+  .play{min-height:52px; border-radius:14px}
+  .pl-main{font-size:17px}
+  .hud small{font-size:9.5px}
+  .hud-mult b{font-size:26px}
+  .hud-item b{font-size:14px}
+  .tower{--rh:clamp(26px, calc((100svh - 500px) / 10), 44px); gap:3px}
+  .t-row{grid-template-columns:54px 1fr; gap:6px}
+  .t-mult{font-size:12px}
+  .t-cells{gap:5px}
+  .wheel-wrap{--w:min(80vw, calc(100svh - 545px), 330px)}
+  .hist{min-height:32px}
+  .hist-row .ball{--s:28px}
+  .hist-tot{height:26px; min-width:36px; font-size:12.5px}
+  .dice-stage{min-height:0; padding:4px 0}
+  .dice-balls .ball{--s:clamp(66px, min(27vw, calc(100svh - 690px)), 116px)}
+  .d-total{min-width:78px; padding:6px 10px}
+  .d-total b{font-size:clamp(30px, 8vw, 42px)}
+}
+@media (max-width:599px) and (max-height:700px){
+  .wheel-board .hist{display:none}
+  .wheel-wrap{--w:min(80vw, calc(100svh - 505px), 330px)}
+}

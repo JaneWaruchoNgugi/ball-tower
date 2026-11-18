@@ -1,0 +1,27 @@
+{
+  "name": "bingo-arcade",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Bingo Arcade: three bingo-themed demo-money game prototypes (Ball Tower, Lucky Wheel 75, Bingo Dice).",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "build:single": "npm run build && node scripts/single-file.mjs"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^5.0.4",
+    "typescript": "~5.9.3",
+    "vite": "^7.1.12",
+    "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}
