@@ -9,7 +9,7 @@ import { sound } from './lib/sound';
 
 const GAMES = [
   { id: 'tower', name: 'Ball Tower', short: 'Tower', blurb: 'Climb and cash out', Comp: BallTower },
-  { id: 'wheel', name: 'Lucky Wheel 55', short: 'Wheel', blurb: 'Spin for a colour or a number', Comp: LuckyWheel },
+  { id: 'wheel', name: 'Lucky Wheel 45', short: 'Wheel', blurb: 'Spin for a colour or a number', Comp: LuckyWheel },
   { id: 'dice', name: 'Bingo Dice', short: 'Dice', blurb: 'Two balls, over or under', Comp: BingoDice },
   { id: 'streak', name: 'Hot Streak', short: 'Streak', blurb: 'Keep your colours coming', Comp: HotStreak },
   { id: 'duel', name: 'Bingo Duel', short: 'Duel', blurb: 'Your line against the house', Comp: BingoDuel },

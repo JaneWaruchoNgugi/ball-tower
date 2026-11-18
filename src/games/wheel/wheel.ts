@@ -1,18 +1,18 @@
 import { LETTERS, type Letter, randInt } from '../../lib/bingo';
 
-/** A shorter 55-ball wheel: 11 numbers per colour, so every segment is wide enough to read. */
-export const SEGMENTS = 55;
+/** A 45-ball wheel: 9 numbers per colour, so every segment is wide enough to read. */
+export const SEGMENTS = 45;
 export const PER_COLOUR = SEGMENTS / 5;
 export const SEG_DEG = 360 / SEGMENTS;
-/** A colour covers 11 of 55 numbers (1 in 5). */
+/** A colour covers 9 of 45 numbers (1 in 5). */
 export const COLOUR_PAYS = 4.85;
-/** One exact number is 1 in 55. */
-export const NUMBER_PAYS = 53;
+/** One exact number is 1 in 45. */
+export const NUMBER_PAYS = 43;
 
-/** Colour group of a wheel number: B 1–11, I 12–22, N 23–33, G 34–44, O 45–55. */
+/** Colour group of a wheel number: B 1–9, I 10–18, N 19–27, G 28–36, O 37–45. */
 export const wheelLetter = (n: number): Letter => LETTERS[Math.min(4, Math.floor((n - 1) / PER_COLOUR))] ?? 'B';
 
-export const WHEEL_RANGE: Record<Letter, readonly [number, number]> = { B: [1, 11], I: [12, 22], N: [23, 33], G: [34, 44], O: [45, 55] };
+export const WHEEL_RANGE: Record<Letter, readonly [number, number]> = { B: [1, 9], I: [10, 18], N: [19, 27], G: [28, 36], O: [37, 45] };
 
 export const spinNumber = (): number => randInt(SEGMENTS) + 1;
 

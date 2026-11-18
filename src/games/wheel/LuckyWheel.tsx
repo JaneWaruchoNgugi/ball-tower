@@ -20,7 +20,7 @@ const SPIN_MS = 5200;
 const ease = (t: number) => 1 - (1 - t) ** 4;
 
 /**
- * Lucky Wheel 55: bet on a colour group (4.85×) or one exact number (53×), then spin.
+ * Lucky Wheel 45: bet on a colour group (4.85×) or one exact number (43×), then spin.
  * The wheel turns with requestAnimationFrame, the pointer flicks on every segment, and
  * the caller reads out the ball that stops under it.
  */
@@ -28,7 +28,7 @@ export function LuckyWheel() {
   const [betText, setBetText] = useState('10');
   const [kind, setKind] = useState<WheelBet['kind']>('colour');
   const [colour, setColour] = useState<Letter>('G');
-  const [num, setNum] = useState(40);
+  const [num, setNum] = useState(32);
   const [err, setErr] = useState('');
   const [spinning, setSpinning] = useState(false);
   const [landed, setLanded] = useState<number | null>(null);
@@ -140,7 +140,7 @@ export function LuckyWheel() {
 
   return (
     <div className="game game-wheel">
-      <section className={`board wheel-board${spinning ? ' spinning' : ''}`} aria-label="Lucky Wheel 55">
+      <section className={`board wheel-board${spinning ? ' spinning' : ''}`} aria-label="Lucky Wheel 45">
         <ResultBar outcome={outcome} idle={spinning ? 'Spinning… watch the gold pointer' : `You win if the pointer stops on ${target} · pays ${fmtM(pays)}×`} />
         <div className="wheel-stage">
           <div className="wheel-wrap">
@@ -149,12 +149,13 @@ export function LuckyWheel() {
             <div ref={wheel} className="wheel">
               <WheelSvg bet={wager} />
             </div>
+            <span className="w-gloss" aria-hidden="true" />
             <span className={`w-win${landed && outcome ? (outcome.win ? ' win' : ' lose') : ''}`} aria-hidden="true" />
             <div className="w-hub">
               {landed ? (
                 <Ball key={landed + (outcome?.id ?? 0)} n={landed} letter={wheelLetter(landed)} className="hub-ball" />
               ) : (
-                <span className="w-hub-txt">{spinning ? '' : '55'}</span>
+                <span className="w-hub-txt">{spinning ? '' : '45'}</span>
               )}
             </div>
             {outcome?.win && <Burst key={outcome.id} big={kind === 'number'} />}
@@ -175,7 +176,7 @@ export function LuckyWheel() {
       <aside className="console">
         <div className="console-head">
           <ModeSwitch auto={auto} setAuto={setAuto} locked={locked} />
-          <button className="info-btn" onClick={() => setRules(true)} aria-label="How to play Lucky Wheel 55">
+          <button className="info-btn" onClick={() => setRules(true)} aria-label="How to play Lucky Wheel 45">
             <InfoIcon /> Rules
           </button>
         </div>
@@ -183,8 +184,8 @@ export function LuckyWheel() {
         <div className="seg tall" role="tablist" aria-label="What do you bet on?">
           {(
             [
-              ['colour', 'A colour', COLOUR_PAYS, '11 balls · 1 in 5'],
-              ['number', 'One number', NUMBER_PAYS, '1 ball · 1 in 55'],
+              ['colour', 'A colour', COLOUR_PAYS, '9 balls · 1 in 5'],
+              ['number', 'One number', NUMBER_PAYS, '1 ball · 1 in 45'],
             ] as const
           ).map(([k, label, m, odds]) => (
             <button
@@ -227,7 +228,7 @@ export function LuckyWheel() {
             ))}
           </div>
         ) : (
-          <div className="num-strip" ref={strip} role="radiogroup" aria-label="Number 1 to 55">
+          <div className="num-strip" ref={strip} role="radiogroup" aria-label="Number 1 to 45">
             {Array.from({ length: SEGMENTS }, (_, i) => i + 1).map((n) => (
               <button
                 key={n}
@@ -272,8 +273,8 @@ export function LuckyWheel() {
       </aside>
 
       {rules && (
-        <Rules title="How to play Lucky Wheel 55" onClose={() => setRules(false)}>
-          <p>The wheel holds 55 numbered balls in five colour groups of 11: B 1–11, I 12–22, N 23–33, G 34–44 and O 45–55. Choose a bet, then spin. The ball that stops under the gold pointer is called.</p>
+        <Rules title="How to play Lucky Wheel 45" onClose={() => setRules(false)}>
+          <p>The wheel holds 45 numbered balls in five colour groups of 9: B 1–9, I 10–18, N 19–27, G 28–36 and O 37–45. Choose a bet, then spin. The ball that stops under the gold pointer is called.</p>
           <table className="pay">
             <thead>
               <tr>
@@ -286,20 +287,20 @@ export function LuckyWheel() {
             <tbody>
               <tr>
                 <td>Colour</td>
-                <td>Any of its 11 balls</td>
+                <td>Any of its 9 balls</td>
                 <td>20%</td>
                 <td>{COLOUR_PAYS}×</td>
               </tr>
               <tr>
                 <td>Number</td>
                 <td>That one ball</td>
-                <td>1.82%</td>
+                <td>2.22%</td>
                 <td>{NUMBER_PAYS}×</td>
               </tr>
             </tbody>
           </table>
           <p>Auto spins the same bet for the number of spins you choose. It stops early if you press Stop or your balance is too low.</p>
-          <p className="fine">Return to player is 97% on colours and 96.4% on numbers. Demo KES only.</p>
+          <p className="fine">Return to player is 97% on colours and 95.6% on numbers. Demo KES only.</p>
         </Rules>
       )}
     </div>

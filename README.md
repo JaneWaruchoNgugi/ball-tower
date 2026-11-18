@@ -3,7 +3,7 @@
 Five bingo-themed game prototypes in one React + TypeScript app. Demo KES only: no deposits, withdrawals or real-money play. Real money would need a gaming licence.
 
 - **Ball Tower:** an endless climb. Each row is Easy (3 of 4 safe), Normal (2 of 3), Hard (1 of 2) or Extreme (1 of 3), and shows the multiplier you get for clearing it. Clear a row and a new one drops in on top. The house keeps a fixed 4% edge at every row (96% RTP); max 1000×.
-- **Lucky Wheel 55:** a 55-ball wheel, 11 numbers per colour. Bet on a colour group (4.85×) or one exact number (53×). Manual or auto spins.
+- **Lucky Wheel 45:** a 45-ball wheel, 9 numbers per colour. Bet on a colour group (4.85×) or one exact number (43×). Manual or auto spins.
 - **Hot Streak:** cover 1 to 4 colour groups and draw balls one at a time. Each ball in your colours grows the multiplier; the first one outside ends the run. Bank any time.
 - **Bingo Duel:** your 5-number line against the house line. Bet on who fills first (1.94×) or a Blowout (20×). Manual or auto.
 - **Bingo Dice:** two different balls are drawn. Bet that the total is over or under a target you set; chance and payout update live. Manual or auto draws.

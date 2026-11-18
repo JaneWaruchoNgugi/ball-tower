@@ -635,3 +635,37 @@ button:disabled{opacity:.45}
   .tower.endless .t-mult b{font-size:13px}
   .tower.endless .t-mult small{font-size:9.5px}
 }
+
+/* =====================================================================
+   LUCKY WHEEL 45 — casino wheel art
+   ===================================================================== */
+.wheel{filter:drop-shadow(0 18px 30px rgba(0,0,0,.6)) drop-shadow(0 0 24px rgba(255,203,69,.12))}
+.wheel-svg .seg{transition:none}
+.wheel-svg .seg.off{opacity:1}
+.seg-shade{fill:rgba(4,14,15,.5); transition:opacity .3s}
+.div-major{stroke:#ffd86a; stroke-width:2.4}
+.div-minor{stroke:rgba(0,0,0,.35); stroke-width:1}
+.nball circle{filter:drop-shadow(0 1.5px 1.5px rgba(0,0,0,.45))}
+.nball-txt{font-family:var(--font-display); font-size:12.5px; fill:#102020; text-anchor:middle; dominant-baseline:central}
+.nball:not(.on){opacity:.62}
+.nball.on circle{stroke:#ffcb45; stroke-width:2}
+.nball.pick circle{stroke:#fff; stroke-width:3; filter:drop-shadow(0 0 7px #ffcb45)}
+.nball.pick .nball-txt{font-size:14px}
+.band path{opacity:.55; transition:opacity .3s}
+.band.on path{opacity:1}
+.band-txt{font-family:var(--font-display); font-size:19px; fill:#fff; text-anchor:middle; dominant-baseline:central; paint-order:stroke; stroke:rgba(0,0,0,.35); stroke-width:3px}
+.band-edge{fill:none; stroke:#ffd86a; stroke-width:2}
+.w-rim{fill:none; stroke:#fff4c8; stroke-width:5; stroke-linecap:round; filter:drop-shadow(0 0 5px rgba(255,203,69,.95))}
+.bulb{fill:#fff3c4; filter:drop-shadow(0 0 3px rgba(255,220,120,.9))}
+.bulb.b0{opacity:.95} .bulb.b1{opacity:.55}
+.wheel-board.spinning .bulb.b0{animation:bulbA .32s steps(1) infinite}
+.wheel-board.spinning .bulb.b1{animation:bulbB .32s steps(1) infinite}
+@keyframes bulbA{50%{opacity:.35}}
+@keyframes bulbB{50%{opacity:1}}
+/* Fixed gloss over the spinning wheel: light comes from above, like a real cabinet. */
+.w-gloss{position:absolute; inset:3.5%; z-index:2; border-radius:50%; pointer-events:none;
+  background:radial-gradient(120% 70% at 50% -5%, rgba(255,255,255,.22), rgba(255,255,255,.05) 45%, transparent 60%), radial-gradient(circle, transparent 55%, rgba(0,0,0,.28) 100%)}
+.w-pointer{top:-6px; width:30px; height:38px; margin-left:-15px}
+.w-hub{width:36%; height:36%; background:radial-gradient(circle at 40% 30%, #1b4144, #061416 78%); box-shadow:0 0 0 4px #ffcb45, 0 0 0 7px rgba(0,0,0,.45), 0 10px 22px rgba(0,0,0,.6), inset 0 2px 8px rgba(255,255,255,.1)}
+.w-hub-txt{font-size:30px; text-shadow:0 0 18px rgba(255,203,69,.5)}
+.w-win{inset:3%; background:conic-gradient(from -4deg, rgba(255,255,255,.95) 0 8deg, transparent 8deg); mask:radial-gradient(circle, transparent 48%, #000 49%, #000 92%, transparent 92.5%)}

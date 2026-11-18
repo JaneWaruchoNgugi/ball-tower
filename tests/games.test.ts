@@ -30,13 +30,13 @@ describe('Ball Tower', () => {
   });
 });
 
-describe('Lucky Wheel 55', () => {
+describe('Lucky Wheel 45', () => {
   it('pays under 100% on both bet types', () => {
     expect(COLOUR_PAYS / 5).toBeLessThan(1);
-    expect(NUMBER_PAYS / 55).toBeLessThan(1);
+    expect(NUMBER_PAYS / 45).toBeLessThan(1);
   });
   it('lands the chosen ball under the pointer', () => {
-    for (const ball of [1, 11, 28, 55]) {
+    for (const ball of [1, 9, 28, 45]) {
       const r = rotationFor(ball, 123.4);
       const atTop = ((360 - (r % 360)) % 360) / SEG_DEG; // segment index under the pointer
       expect(Math.floor(atTop) + 1).toBe(ball);
@@ -44,8 +44,9 @@ describe('Lucky Wheel 55', () => {
     }
   });
   it('matches colour and number bets', () => {
-    expect(wheelWins({ kind: 'colour', pick: 'G' }, 40)).toBe(true);
-    expect(wheelWins({ kind: 'colour', pick: 'O' }, 45)).toBe(true);
+    expect(wheelWins({ kind: 'colour', pick: 'G' }, 30)).toBe(true);
+    expect(wheelWins({ kind: 'colour', pick: 'O' }, 37)).toBe(true);
+    expect(wheelWins({ kind: 'colour', pick: 'G' }, 37)).toBe(false);
     expect(wheelWins({ kind: 'number', pick: 52 }, 53)).toBe(false);
     expect(letterOf(75)).toBe('O');
   });
