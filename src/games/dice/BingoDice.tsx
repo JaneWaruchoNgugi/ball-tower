@@ -6,16 +6,24 @@ import { Burst } from '../../components/Burst';
 import { InfoIcon } from '../../components/Icons';
 import { type Outcome, ResultBar } from '../../components/ResultBar';
 import { Rules } from '../../components/Rules';
+import { Steps } from '../../components/Steps';
 import { useAutoPlay } from '../../hooks/useAutoPlay';
 import { useCountUp } from '../../hooks/useCountUp';
 import { fmt, fmtM, letterOf, money, randBall, reducedMotion } from '../../lib/bingo';
 import { sound } from '../../lib/sound';
 import { betError, wallet } from '../../lib/wallet';
-import { MAX_TOTAL, MIN_TOTAL, type Side, diceChance, diceMult, drawPair } from './dice';
+import { MAX_TOTAL, MIN_TOTAL, type Side, diceChance, diceMult, drawPair, targetFor } from './dice';
 
 const ROLL_MS = 1150;
 const T_MIN = 20;
 const T_MAX = 132;
+const PRESETS = [
+  ['Safe', 0.75],
+  ['Even', 0.5],
+  ['Bold', 0.25],
+  ['Long shot', 0.05],
+] as const;
+const sideWord = (s: Side) => (s === 'over' ? 'more than' : 'less than');
 
 /**
  * Bingo Dice: two different balls are drawn. Bet that their total lands over or under a
@@ -84,8 +92,8 @@ export function BingoDice() {
       setTimeout(() => sound.call(`${letterOf(a)} ${a}, ${letterOf(b)} ${b}. Total, ${t}.`), 250);
       setOutcome({
         win,
-        title: `Total ${t} · ${win ? `you won ${fmtM(stake.mult)}×` : 'no win'}`,
-        detail: `Your bet: ${stake.side} ${stake.target}`,
+        title: `${a} + ${b} = ${t} · ${win ? `you win ${fmtM(stake.mult)}×` : 'you lose'}`,
+        detail: `${t} is ${win ? '' : 'not '}${sideWord(stake.side)} ${stake.target}`,
         net: money(payout - stake.bet),
         id,
       });
@@ -105,7 +113,7 @@ export function BingoDice() {
   return (
     <div className="game game-dice">
       <section className={`board dice-board${rolling ? ' rolling' : ''}`} aria-label="Bingo Dice">
-        <ResultBar outcome={outcome} idle={rolling ? 'Drawing two balls…' : `Win if the total is ${side} ${target}`} />
+        <ResultBar outcome={outcome} idle={rolling ? 'Drawing two balls…' : `You win if the two balls add up to ${sideWord(side)} ${target}`} />
         <div className="dice-stage">
           <div className="dice-balls">
             <span className="d-slot">
@@ -116,6 +124,9 @@ export function BingoDice() {
             </span>
             <span className="d-slot">
               <Ball n={balls[1]} className={rolling ? 'tumble b2' : total ? 'drop b2' : ''} />
+            </span>
+            <span className="op" aria-hidden="true">
+              =
             </span>
           </div>
           <div className={`d-total${settled ? (outcome.win ? ' win' : ' lose') : ''}`} aria-live="off">
@@ -128,7 +139,17 @@ export function BingoDice() {
         <div className="track-wrap">
           <div className="track" aria-hidden="true">
             <span className="zone" style={zone} />
-            {total !== null && <span className={`hit${outcome?.win ? ' win' : ' lose'}`} style={{ left: `${pos(total)}%` }} />}
+            <span className="z-lbl lose" style={side === 'over' ? { left: 0, right: `${100 - pos(target)}%` } : { left: `${pos(target)}%`, right: 0 }}>
+              LOSE
+            </span>
+            <span className="z-lbl win" style={side === 'over' ? { left: `${pos(target)}%`, right: 0 } : { left: 0, right: `${100 - pos(target)}%` }}>
+              WIN
+            </span>
+            {total !== null && (
+              <span className={`hit${outcome?.win ? ' win' : ' lose'}`} style={{ left: `${pos(total)}%` }}>
+                <b>{total}</b>
+              </span>
+            )}
           </div>
           <input
             className="tslider"
@@ -143,7 +164,7 @@ export function BingoDice() {
           <div className="track-ends" aria-hidden="true">
             <span>{MIN_TOTAL}</span>
             <span className="t-target" style={{ left: `${pos(target)}%` }}>
-              {target}
+              Target {target}
             </span>
             <span>{MAX_TOTAL}</span>
           </div>
@@ -153,7 +174,7 @@ export function BingoDice() {
           <small>Previous</small>
           <div className="hist-row">
             {history.length === 0 ? (
-              <span className="hist-empty">Totals appear here</span>
+              <Steps steps={['Drag the gold handle to set a target', 'Choose more or less than it', 'Draw: two balls are added up']} />
             ) : (
               history.map((h) => (
                 <span key={h.id} className={`hist-tot ${h.win ? 'win' : 'lose'}`}>
@@ -173,7 +194,7 @@ export function BingoDice() {
           </button>
         </div>
         <BetBox value={betText} onChange={setBetText} disabled={locked} />
-        <div className="seg" role="tablist" aria-label="Over or under">
+        <div className="seg tall" role="tablist" aria-label="Over or under">
           {(['under', 'over'] as const).map((s) => (
             <button
               key={s}
@@ -185,9 +206,29 @@ export function BingoDice() {
                 setSide(s);
               }}
             >
-              {s === 'over' ? 'Over' : 'Under'} <em>{target}</em>
+              <span className="bt-top">{s === 'over' ? 'Over' : 'Under'} {target}</span>
+              <small>{s === 'over' ? `Total ${target + 1} or more` : `Total ${target - 1} or less`}</small>
             </button>
           ))}
+        </div>
+        <div className="chips presets" role="group" aria-label="Quick targets">
+          {PRESETS.map(([label, p]) => {
+            const t = targetFor(side, p, T_MIN, T_MAX);
+            return (
+              <button
+                key={label}
+                className={t === target ? 'on' : undefined}
+                disabled={locked}
+                onClick={() => {
+                  sound.play('click');
+                  setTarget(t);
+                }}
+              >
+                {label}
+                <small>{Math.round(diceChance(side, t) * 100)}%</small>
+              </button>
+            );
+          })}
         </div>
         <div className="stats">
           <div>
@@ -222,7 +263,7 @@ export function BingoDice() {
           <button className="play" disabled={rolling} onClick={() => roll()}>
             <span className="pl-main">{rolling ? 'Drawing' : 'Draw'}</span>
             <span className="pl-sub">
-              {side === 'over' ? 'Over' : 'Under'} {target} · win KES {fmt((bet || 0) * mult)}
+              Total {sideWord(side)} {target} · win KES {fmt((bet || 0) * mult)}
             </span>
           </button>
         )}

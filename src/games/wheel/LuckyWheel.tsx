@@ -1,4 +1,4 @@
-import { type CSSProperties, useEffect, useRef, useState } from 'react';
+import { type CSSProperties, useEffect, useMemo, useRef, useState } from 'react';
 import { AutoRounds, ModeSwitch } from '../../components/AutoControls';
 import { Ball } from '../../components/Ball';
 import { BetBox, parseBet } from '../../components/BetBox';
@@ -6,6 +6,7 @@ import { Burst } from '../../components/Burst';
 import { InfoIcon } from '../../components/Icons';
 import { type Outcome, ResultBar } from '../../components/ResultBar';
 import { Rules } from '../../components/Rules';
+import { Steps } from '../../components/Steps';
 import { useAutoPlay } from '../../hooks/useAutoPlay';
 import { GROUP_COLOR, GROUP_NAME, GROUP_RANGE, LETTERS, type Letter, fmt, fmtM, letterOf, money, randBall, reducedMotion } from '../../lib/bingo';
 import { sound } from '../../lib/sound';
@@ -44,7 +45,7 @@ export function LuckyWheel() {
   const raf = useRef(0);
   useEffect(() => () => cancelAnimationFrame(raf.current), []);
 
-  const wager: WheelBet = kind === 'colour' ? { kind, pick: colour } : { kind, pick: num };
+  const wager = useMemo<WheelBet>(() => (kind === 'colour' ? { kind, pick: colour } : { kind, pick: num }), [kind, colour, num]);
   const pays = wheelPays(wager);
   const bet = parseBet(betText);
 
@@ -106,11 +107,19 @@ export function LuckyWheel() {
     setLanded(ball);
     setHistory((h) => [{ n: ball, win }, ...h].slice(0, 16));
     setSpinning(false);
-    const yours = stake.wager.kind === 'colour' ? `${GROUP_NAME[stake.wager.pick]} (${stake.wager.pick})` : `number ${stake.wager.pick}`;
+    const w = stake.wager;
+    const detail =
+      w.kind === 'colour'
+        ? win
+          ? `Landed on ${ball}: ${GROUP_NAME[L]}, your colour`
+          : `Landed on ${ball}: ${GROUP_NAME[L]}, you picked ${GROUP_NAME[w.pick]}`
+        : win
+          ? `Landed exactly on your number`
+          : `Landed on ${ball}, you picked ${w.pick}`;
     setOutcome({
       win,
-      title: `${L}-${ball} · ${win ? `you won ${fmtM(wheelPays(stake.wager))}×` : 'no win'}`,
-      detail: `Your bet: ${yours}`,
+      title: `${L}-${ball} · ${win ? `you win ${fmtM(wheelPays(w))}×` : 'you lose'}`,
+      detail,
       net: money(payout - stake.bet),
       id: Date.now(),
     });
@@ -127,18 +136,18 @@ export function LuckyWheel() {
     el?.scrollIntoView({ inline: 'center', block: 'nearest', behavior: reducedMotion() ? 'auto' : 'smooth' });
   }, [num, kind]);
 
-  const target = kind === 'colour' ? GROUP_NAME[colour] : `${letterOf(num)}-${num}`;
+  const target = kind === 'colour' ? `${GROUP_NAME[colour]} (${GROUP_RANGE[colour][0]}–${GROUP_RANGE[colour][1]})` : `number ${num}`;
 
   return (
     <div className="game game-wheel">
       <section className={`board wheel-board${spinning ? ' spinning' : ''}`} aria-label="Lucky Wheel 75">
-        <ResultBar outcome={outcome} idle={spinning ? 'The wheel is spinning…' : `Your bet: ${target} · pays ${fmtM(pays)}×`} />
+        <ResultBar outcome={outcome} idle={spinning ? 'Spinning… watch the gold pointer' : `You win if the pointer stops on ${target} · pays ${fmtM(pays)}×`} />
         <div className="wheel-stage">
           <div className="wheel-wrap">
             <span className="w-glow" aria-hidden="true" />
             <span ref={pointer} className="w-pointer" aria-hidden="true" />
             <div ref={wheel} className="wheel">
-              <WheelSvg />
+              <WheelSvg bet={wager} />
             </div>
             <span className={`w-win${landed && outcome ? (outcome.win ? ' win' : ' lose') : ''}`} aria-hidden="true" />
             <div className="w-hub">
@@ -155,7 +164,7 @@ export function LuckyWheel() {
           <small>Previous</small>
           <div className="hist-row">
             {history.length === 0 ? (
-              <span className="hist-empty">Results appear here</span>
+              <Steps steps={['Pick a colour or one number', 'Press Spin', 'Win if the pointer stops on your pick']} />
             ) : (
               history.map((h, i) => <Ball key={history.length - i} n={h.n} className={h.win ? 'hit' : ''} />)
             )}
@@ -171,13 +180,13 @@ export function LuckyWheel() {
           </button>
         </div>
         <BetBox value={betText} onChange={setBetText} disabled={locked} />
-        <div className="seg" role="tablist" aria-label="Bet type">
+        <div className="seg tall" role="tablist" aria-label="What do you bet on?">
           {(
             [
-              ['colour', 'Colour', COLOUR_PAYS],
-              ['number', 'Number', NUMBER_PAYS],
+              ['colour', 'A colour', COLOUR_PAYS, '15 balls · 1 in 5'],
+              ['number', 'One number', NUMBER_PAYS, '1 ball · 1 in 75'],
             ] as const
-          ).map(([k, label, m]) => (
+          ).map(([k, label, m, odds]) => (
             <button
               key={k}
               role="tab"
@@ -188,7 +197,10 @@ export function LuckyWheel() {
                 setKind(k);
               }}
             >
-              {label} <em>{fmtM(m)}×</em>
+              <span className="bt-top">
+                {label} <em>{fmtM(m)}×</em>
+              </span>
+              <small>{odds}</small>
             </button>
           ))}
         </div>

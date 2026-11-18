@@ -541,3 +541,68 @@ button:disabled{opacity:.45}
 }
 /* After a loss the multiplier shown is the one that was lost: strike it, never celebrate it. */
 .tower-board.lost .hud-mult b, .streak-board.busted .hud-mult b{color:#ff9a9a; text-shadow:none; text-decoration:line-through; text-decoration-thickness:3px}
+
+/* =====================================================================
+   CLARITY PASS — show the bet on the board, explain every result
+   ===================================================================== */
+.steps{flex:1; min-width:0; display:flex; gap:6px; margin:0; padding:0; list-style:none; overflow:hidden}
+.steps li{flex:1; min-width:0; display:flex; align-items:center; gap:6px; padding:5px 8px; border-radius:10px; background:rgba(0,0,0,.22); font-size:12px; line-height:1.2; color:#cfe0da}
+.steps b{flex:none; width:20px; height:20px; border-radius:50%; display:grid; place-items:center; font-family:var(--font-display); font-weight:400; font-size:11px; color:#201500; background:var(--gold)}
+.hist:has(.steps) > small{display:none}
+
+/* Two-line choice buttons: what it is, then its odds in plain words. */
+.seg.tall button{height:auto; min-height:50px; padding:6px 4px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px}
+.seg.tall .bt-top{font-weight:700; font-size:14px}
+.seg.tall small{font-size:11.5px; font-weight:500; color:var(--dim)}
+.seg.tall button[aria-selected="true"] small{color:var(--muted)}
+
+/* Wheel: your bet stays lit, everything else dims; a gold rim marks your segments. */
+.wheel-svg .seg{transition:opacity .35s}
+.wheel-svg .seg.off{opacity:.32}
+.wheel-svg .seg.on .w-num{font-size:11px}
+.w-rim{fill:none; stroke:#fff3c4; stroke-width:7; stroke-linecap:round; filter:drop-shadow(0 0 6px rgba(255,203,69,.9))}
+.w-mark{fill:#fff3c4; filter:drop-shadow(0 0 6px rgba(255,203,69,1))}
+
+/* Dice track: the bar itself says WIN and LOSE, the total lands on it as a numbered pin. */
+.track{height:30px; overflow:visible; background:rgba(255,93,93,.16)}
+.zone{box-shadow:0 0 14px rgba(51,224,138,.35)}
+.z-lbl{position:absolute; top:0; bottom:0; display:grid; place-items:center; font-family:var(--font-display); font-size:12px; letter-spacing:.1em; pointer-events:none; overflow:hidden; white-space:nowrap; transition:left .2s var(--ease-out), right .2s var(--ease-out)}
+.z-lbl.win{color:#04281a}
+.z-lbl.lose{color:#ff9a9a}
+.track .hit{position:absolute; top:-24px; width:auto; height:auto; margin:0; border:0; background:none; box-shadow:none; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; z-index:2; animation:pinIn .5s var(--ease-back)}
+.track .hit b{min-width:36px; padding:3px 6px; border-radius:8px; text-align:center; font-family:var(--font-mono); font-size:13px; color:#fff; background:var(--miss); box-shadow:0 3px 8px rgba(0,0,0,.5)}
+.track .hit.win b{background:var(--win); color:#03170c}
+.track .hit::after{content:""; width:3px; height:40px; margin-top:-1px; border-radius:2px; background:inherit; background:#fff; box-shadow:0 0 6px rgba(255,255,255,.8)}
+@keyframes pinIn{from{transform:translate(-50%, -16px); opacity:0}}
+.tslider{top:2px; height:30px}
+.tslider::-webkit-slider-runnable-track{height:30px}
+.tslider::-moz-range-track{height:30px}
+.tslider::-webkit-slider-thumb{width:22px; height:40px; margin-top:-5px; border-radius:8px}
+.tslider::-moz-range-thumb{width:22px; height:40px; border-radius:8px}
+.track-wrap{padding-top:26px}
+.t-target{white-space:nowrap}
+.chips.presets{grid-template-columns:repeat(4,1fr)}
+.chips.presets button{height:40px; display:flex; flex-direction:column; align-items:center; justify-content:center; line-height:1.1; font-family:var(--font-body); font-weight:700; font-size:12.5px}
+.chips.presets small{font-family:var(--font-mono); font-weight:500; font-size:11px; opacity:.8}
+
+@media (max-width:599px){
+  .steps li{font-size:11px; padding:4px 6px; gap:4px}
+  .steps b{width:18px; height:18px; font-size:10px}
+  .seg.tall button{min-height:46px}
+  .wheel-wrap{--w:min(80vw, calc(100svh - 560px), 330px)}
+  .track-wrap{padding-top:24px}
+}
+@media (max-width:599px){
+  .dice-balls .ball{--s:clamp(60px, min(24vw, calc(100svh - 700px)), 100px)}
+  .dice-stage{gap:8px} .dice-balls{gap:4px} .op{font-size:18px}
+  .d-total{min-width:70px; padding:6px 8px}
+}
+@media (max-width:599px) and (max-height:760px){
+  .seg.tall small{display:none}
+  .seg.tall button{min-height:38px}
+  .chips.presets button{height:34px}
+  .chips.presets small{display:none}
+  .dice-balls .ball{--s:60px}
+  .wheel-board .hist, .dice-board .hist{display:none}
+  .wheel-wrap{--w:min(80vw, calc(100svh - 505px), 330px)}
+}

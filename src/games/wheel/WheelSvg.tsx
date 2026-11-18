@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { GROUP_COLOR, letterOf } from '../../lib/bingo';
-import { SEGMENTS, SEG_DEG } from './wheel';
+import { SEGMENTS, SEG_DEG, type WheelBet } from './wheel';
 
 const R = 200;
 const C = 210;
@@ -16,10 +16,14 @@ function shade(hex: string, k: number): string {
   return `rgb(${f(n >> 16)},${f((n >> 8) & 255)},${f(n & 255)})`;
 }
 
-/** The 75-segment wheel, numbers 1–75 clockwise from the top, coloured by group. */
-export const WheelSvg = memo(function WheelSvg() {
+/**
+ * The 75-segment wheel, numbers 1–75 clockwise from the top, coloured by group.
+ * Segments the player's bet covers stay bright and get a gold rim; the rest dim.
+ */
+export const WheelSvg = memo(function WheelSvg({ bet }: { bet: WheelBet }) {
+  const covers = (n: number) => (bet.kind === 'colour' ? letterOf(n) === bet.pick : n === bet.pick);
   return (
-    <svg viewBox="0 0 420 420" className="wheel-svg" aria-hidden="true">
+    <svg viewBox="-10 -10 440 440" className="wheel-svg" aria-hidden="true">
       <circle cx={C} cy={C} r={R + 8} fill="#0a1d1e" stroke="#ffcf3d" strokeWidth="3" />
       {Array.from({ length: SEGMENTS }, (_, i) => {
         const n = i + 1;
@@ -31,8 +35,9 @@ export const WheelSvg = memo(function WheelSvg() {
         const fill = shade(base, i % 2 ? 0.78 : 1);
         const mid = a0 + SEG_DEG / 2;
         const [tx, ty] = point(mid, R - 16);
+        const on = covers(n);
         return (
-          <g key={n}>
+          <g key={n} className={on ? 'seg on' : 'seg off'}>
             <path d={`M${C},${C} L${x0},${y0} A${R},${R} 0 0 1 ${x1},${y1} Z`} fill={fill} stroke="#0a1d1e" strokeWidth="0.8" />
             <text x={tx} y={ty} transform={`rotate(${mid} ${tx} ${ty})`} className="w-num">
               {n}
@@ -40,6 +45,21 @@ export const WheelSvg = memo(function WheelSvg() {
           </g>
         );
       })}
+      {/* Gold rim over the segments your bet covers. */}
+      {(() => {
+        const nums = Array.from({ length: SEGMENTS }, (_, i) => i + 1).filter(covers);
+        const first = nums[0] ?? 1;
+        const last = nums[nums.length - 1] ?? 1;
+        const [x0, y0] = point((first - 1) * SEG_DEG, R + 4);
+        const [x1, y1] = point(last * SEG_DEG, R + 4);
+        const large = (last - first + 1) * SEG_DEG > 180 ? 1 : 0;
+        return <path className="w-rim" d={`M${x0},${y0} A${R + 4},${R + 4} 0 ${large} 1 ${x1},${y1}`} />;
+      })()}
+      {bet.kind === 'number' &&
+        (() => {
+          const [x, y] = point((bet.pick - 0.5) * SEG_DEG, R + 15);
+          return <circle className="w-mark" cx={x} cy={y} r="6" />;
+        })()}
       {/* Group letters on the inner ring. */}
       {(['B', 'I', 'N', 'G', 'O'] as const).map((L, g) => {
         const mid = (g * 15 + 7.5) * SEG_DEG;

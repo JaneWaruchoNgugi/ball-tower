@@ -30,3 +30,10 @@ export function drawPair(): [number, number] {
   if (b >= a) b++;
   return [a, b];
 }
+
+/** The target (within limits) whose chance is closest to `p` for this side. */
+export function targetFor(side: Side, p: number, min = 20, max = 132): number {
+  let best = min;
+  for (let t = min; t <= max; t++) if (Math.abs(diceChance(side, t) - p) < Math.abs(diceChance(side, best) - p)) best = t;
+  return best;
+}
