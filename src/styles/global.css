@@ -604,3 +604,34 @@ button:disabled{opacity:.45}
   .wheel-board .hist, .dice-board .hist{display:none}
   .wheel-wrap{--w:min(80vw, calc(100svh - 505px), 330px)}
 }
+
+/* =====================================================================
+   BALL TOWER — endless climb: 7-row window, rows of different risk
+   ===================================================================== */
+.tower.endless{--rh:clamp(36px, calc((100svh - 470px) / 7), 52px); position:relative; overflow:hidden; flex:1; display:flex; flex-direction:column; justify-content:flex-end;
+  -webkit-mask-image:linear-gradient(to bottom, transparent 0, #000 9%, #000 88%, rgba(0,0,0,.55) 100%); mask-image:linear-gradient(to bottom, transparent 0, #000 9%, #000 88%, rgba(0,0,0,.55) 100%)}
+.t-stack{display:flex; flex-direction:column; gap:5px; will-change:transform}
+.tower.endless .t-row{grid-template-columns:76px 1fr; animation:rowDrop .45s var(--ease-out) backwards}
+@keyframes rowDrop{from{opacity:0; transform:translateY(-22px)}}
+.tower.endless .t-mult{flex-direction:column; align-items:flex-end; justify-content:center; gap:1px; line-height:1.1}
+.tower.endless .t-mult b{display:flex; align-items:center; gap:3px; font-size:14px}
+.tower.endless .t-mult small{font-family:var(--font-body); font-weight:700; font-size:10px; letter-spacing:.04em; text-transform:uppercase; color:var(--dim)}
+.t-easy .t-mult small{color:#5fd89a} .t-normal .t-mult small{color:var(--muted)} .t-hard .t-mult small{color:#ffb35c} .t-extreme .t-mult small{color:#ff7a7a}
+.t-extreme .t-cell{box-shadow:inset 0 0 0 1px rgba(255,93,93,.25)}
+.t-row.ahead{opacity:.72}
+.t-row.cleared{opacity:.7}
+.tower.endless .t-cell .ball{--s:calc(var(--rh) - 8px)}
+.tower.endless .sealed, .tower.endless .blk{width:calc(var(--rh) - 10px); height:calc(var(--rh) - 10px)}
+.tower-board.lost .t-cell.open:not(.picked) .t-inner, .tower-board.cashed .t-cell.open:not(.picked) .t-inner{animation-delay:calc(200ms + var(--rd))}
+@media (min-width:960px){
+  .tower.endless{--rh:clamp(48px, calc((100svh - 390px) / 7), 66px)}
+  .tower.endless .t-row{grid-template-columns:96px 1fr}
+  .tower.endless .t-mult b{font-size:16px}
+  .tower.endless .t-mult small{font-size:11px}
+}
+@media (max-width:599px){
+  .tower.endless{--rh:clamp(34px, calc((100svh - 500px) / 7), 50px)}
+  .tower.endless .t-row{grid-template-columns:66px 1fr}
+  .tower.endless .t-mult b{font-size:13px}
+  .tower.endless .t-mult small{font-size:9.5px}
+}
