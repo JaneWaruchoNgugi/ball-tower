@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Header } from './components/Header';
 import { BingoDice } from './games/dice/BingoDice';
+import { BingoDuel } from './games/duel/BingoDuel';
+import { HotStreak } from './games/streak/HotStreak';
 import { BallTower } from './games/tower/BallTower';
 import { LuckyWheel } from './games/wheel/LuckyWheel';
 import { sound } from './lib/sound';
@@ -9,6 +11,8 @@ const GAMES = [
   { id: 'tower', name: 'Ball Tower', short: 'Tower', blurb: 'Climb and cash out', Comp: BallTower },
   { id: 'wheel', name: 'Lucky Wheel 75', short: 'Wheel 75', blurb: 'Spin for a colour or a number', Comp: LuckyWheel },
   { id: 'dice', name: 'Bingo Dice', short: 'Dice', blurb: 'Two balls, over or under', Comp: BingoDice },
+  { id: 'streak', name: 'Hot Streak', short: 'Streak', blurb: 'Keep your colours coming', Comp: HotStreak },
+  { id: 'duel', name: 'Bingo Duel', short: 'Duel', blurb: 'Your line against the house', Comp: BingoDuel },
 ] as const;
 
 type GameId = (typeof GAMES)[number]['id'];

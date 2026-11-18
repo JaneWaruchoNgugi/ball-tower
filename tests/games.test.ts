@@ -59,3 +59,44 @@ describe('Bingo Dice', () => {
     }
   });
 });
+
+import { DUEL_PAYS, deal, duelWins, playOut } from '../src/games/duel/duel';
+import { isHit, streakMult } from '../src/games/streak/streak';
+
+describe('Hot Streak', () => {
+  it('pays about 97% for every risk level and length', () => {
+    for (let k = 1; k <= 4; k++)
+      for (let n = 1; n <= 8; n++) {
+        const rtp = streakMult(k, n) * (k / 5) ** n;
+        expect(rtp).toBeLessThanOrEqual(0.97 + 1e-9);
+        expect(rtp).toBeGreaterThan(0.955);
+      }
+  });
+  it('matches balls to covered colours', () => {
+    expect(isHit(52, ['G'])).toBe(true);
+    expect(isHit(52, ['B', 'I'])).toBe(false);
+  });
+});
+
+describe('Bingo Duel', () => {
+  it('deals disjoint lines with one ball per column', () => {
+    for (let i = 0; i < 200; i++) {
+      const d = deal();
+      d.you.forEach((n, c) => {
+        expect(Math.ceil(n / 15) - 1).toBe(c);
+        expect(d.house).not.toContain(n);
+      });
+      expect(new Set(d.order).size).toBe(75);
+    }
+  });
+  it('pays under 100% on every bet', () => {
+    expect(DUEL_PAYS.you * 0.5).toBeLessThan(1);
+    expect(DUEL_PAYS.blowout * (12 / 252)).toBeLessThan(1);
+  });
+  it('settles a duel', () => {
+    const r = playOut({ you: [1, 16, 31, 46, 61], house: [2, 17, 32, 47, 62], order: [1, 16, 2, 31, 46, 61, 17] });
+    expect(r).toEqual({ winner: 'you', drawn: 6, loserMarked: 1 });
+    expect(duelWins('blowout', r)).toBe(true);
+    expect(duelWins('house', r)).toBe(false);
+  });
+});
