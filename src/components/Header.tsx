@@ -43,12 +43,14 @@ export function Header() {
 
   return (
     <header className="top">
-      <div className="logo" aria-label="Bingo Arcade">
-        <span className="logo-ball" aria-hidden="true">
-          75
+      <div className="logo" aria-label="Ball Tower">
+        <span className="logo-tower" aria-hidden="true">
+          <i style={{ background: 'var(--o)' }} />
+          <i style={{ background: 'var(--g)' }} />
+          <i style={{ background: 'var(--b)' }} />
         </span>
         <span className="logo-txt">
-          BINGO<em>ARCADE</em>
+          BALL<em>TOWER</em>
         </span>
       </div>
       <div className="top-right">

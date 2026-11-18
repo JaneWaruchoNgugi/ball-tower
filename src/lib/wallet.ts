@@ -2,7 +2,7 @@ import { useSyncExternalStore } from 'react';
 import { money } from './bingo';
 
 export const START_BALANCE = 10_000;
-const KEY = 'bingoarcade.balance';
+const KEY = 'balltower.balance';
 
 /** Demo KES balance shared by all three games, saved in localStorage. */
 class Wallet {

@@ -1,8 +1,8 @@
 {
-  "name": "bingo-arcade",
+  "name": "ball-tower",
   "private": true,
   "version": "0.1.0",
-  "description": "Bingo Arcade: three bingo-themed demo-money game prototypes (Ball Tower, Lucky Wheel 75, Bingo Dice).",
+  "description": "Ball Tower: an endless bingo-ball climb. Demo-money game prototype.",
   "type": "module",
   "scripts": {
     "dev": "vite",

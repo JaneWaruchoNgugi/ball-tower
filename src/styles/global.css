@@ -688,3 +688,13 @@ button:disabled{opacity:.45}
 .w-gloss{inset:1%; background:radial-gradient(110% 60% at 50% -8%, rgba(255,255,255,.20), rgba(255,255,255,.04) 45%, transparent 58%)}
 .w-win{inset:7%; background:conic-gradient(from -4deg, rgba(255,255,255,.9) 0 8deg, transparent 8deg); mask:radial-gradient(circle, transparent 38%, #000 39%, #000 99%, transparent 100%)}
 .hub-ball{--s:calc(var(--w) * .27)}
+
+/* =====================================================================
+   BALL TOWER — standalone: logo, and the tower takes the freed height
+   ===================================================================== */
+.logo-tower{display:flex; flex-direction:column-reverse; align-items:center; gap:2px}
+.logo-tower i{display:block; width:13px; height:13px; border-radius:50%; box-shadow:inset -2px -3px 4px rgba(0,0,0,.35), 0 0 8px rgba(255,203,69,.15)}
+.logo-tower i:nth-child(2){margin-left:10px} .logo-tower i:nth-child(3){margin-left:-6px}
+.tower.endless{--rh:clamp(38px, calc((100svh - 420px) / 7), 56px)}
+@media (min-width:960px){ .tower.endless{--rh:clamp(50px, calc((100svh - 340px) / 7), 70px)} .board{min-height:min(calc(100svh - 110px), 760px)} }
+@media (max-width:599px){ .tower.endless{--rh:clamp(36px, calc((100svh - 455px) / 7), 56px)} }

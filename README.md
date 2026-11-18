@@ -1,33 +1,35 @@
-# Bingo Arcade
+# Ball Tower
 
-Five bingo-themed game prototypes in one React + TypeScript app. Demo KES only: no deposits, withdrawals or real-money play. Real money would need a gaming licence.
+An endless bingo-ball climb, built in React + TypeScript. Demo KES only: no deposits, withdrawals or real-money play. Real money would need a gaming licence.
 
-- **Ball Tower:** an endless climb. Each row is Easy (3 of 4 safe), Normal (2 of 3), Hard (1 of 2) or Extreme (1 of 3), and shows the multiplier you get for clearing it. Clear a row and a new one drops in on top. The house keeps a fixed 4% edge at every row (96% RTP); max 1000×.
-- **Lucky Wheel 45:** a 45-ball wheel, 9 numbers per colour. Bet on a colour group (4.85×) or one exact number (43×). Manual or auto spins.
-- **Hot Streak:** cover 1 to 4 colour groups and draw balls one at a time. Each ball in your colours grows the multiplier; the first one outside ends the run. Bank any time.
-- **Bingo Duel:** your 5-number line against the house line. Bet on who fills first (1.94×) or a Blowout (20×). Manual or auto.
-- **Bingo Dice:** two different balls are drawn. Bet that the total is over or under a target you set; chance and payout update live. Manual or auto draws.
+## How it plays
 
-All five return about 96–97% to the player. Outcomes use the browser's crypto RNG; in a real product they would come from a server.
+Each row hides sealed bingo balls, some of them blockers. Pick one ball in the glowing row. A safe ball clears the row, the tower slides down and a new row drops in on top. Cash out after any row; a blocker loses the bet.
+
+| Row | Safe balls | Chance | Raises your win by | Dealt |
+|---|---|---|---|---|
+| Easy | 3 of 4 | 75% | ×1.33 | 30% |
+| Normal | 2 of 3 | 67% | ×1.5 | 40% |
+| Hard | 1 of 2 | 50% | ×2 | 22% |
+| Extreme | 1 of 3 | 33% | ×3 | 8% |
+
+Multiplier = 0.96 × the product of the fair steps of every cleared row, so the house keeps a fixed 4% edge whenever you cash out (96% RTP). The climb banks itself at 1000× or after 30 rows. Outcomes use the browser's crypto RNG; in a real product they would come from a server.
 
 ## Structure
 
 ```
 src/
-  main.tsx, App.tsx       entry and game switcher (#tower, #wheel, #dice, #streak, #duel)
-  components/             Header, Ball, BetBox, ResultBar, Burst, Rules, AutoControls, Icons
-  games/
-    tower/                tower.ts (rules and payouts), BallTower.tsx
-    wheel/                wheel.ts, WheelSvg.tsx, LuckyWheel.tsx
-    dice/                 dice.ts, BingoDice.tsx
-    streak/               streak.ts, HotStreak.tsx
-    duel/                 duel.ts, BingoDuel.tsx
-  hooks/                  useCountUp (rAF number tweens), useAutoPlay
-  lib/                    bingo.ts (groups, RNG, formatting), wallet.ts (shared demo balance), sound.ts
-  audio/                  Web Audio sound effects and the caller voice
+  main.tsx, App.tsx
+  games/tower/          tower.ts (row types, dealing, payouts), BallTower.tsx (the game)
+  components/           Header, Ball, BetBox, ResultBar, Burst, Rules, Icons
+  hooks/useCountUp.ts   requestAnimationFrame number tweens
+  lib/                  bingo.ts (colours, RNG, formatting), wallet.ts (demo balance), sound.ts
+  audio/                Web Audio sound effects and the caller voice
   styles/global.css
-tests/games.test.ts       payouts, RTP and wheel landing maths
+tests/tower.test.ts     house edge, dealing and weights
 ```
+
+The earlier five-game arcade (Wheel, Dice, Hot Streak, Duel) is kept in git under the tag `arcade-5-games`.
 
 ## Run it
 
@@ -35,5 +37,5 @@ tests/games.test.ts       payouts, RTP and wheel landing maths
 npm install
 npm run dev
 npm test
-npm run build:single   # dist/bingo-arcade.html, one self-contained file
+npm run build:single   # dist/ball-tower.html, one self-contained file
 ```

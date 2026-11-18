@@ -1,4 +1,4 @@
-// Inline the built CSS and JS into one self-contained HTML file: dist/bingo-arcade.html.
+// Inline the built CSS and JS into one self-contained HTML file: dist/ball-tower.html.
 // Run after `vite build` (npm run build:single does both).
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -12,5 +12,5 @@ html = html.replace(/<script type="module"[^>]*src="\.\/(assets\/[^"]+\.js)"[^>]
   `<script type="module">\n${readFileSync(join(dist, file), 'utf8').replace(/<\/script/gi, '<\\/script')}\n</script>`);
 
 if (/src="\.\/assets|href="\.\/assets/.test(html)) throw new Error('Some assets were not inlined');
-writeFileSync(join(dist, 'bingo-arcade.html'), html);
-console.log('Wrote dist/bingo-arcade.html', `${(html.length / 1024).toFixed(1)} kB`);
+writeFileSync(join(dist, 'ball-tower.html'), html);
+console.log('Wrote dist/ball-tower.html', `${(html.length / 1024).toFixed(1)} kB`);

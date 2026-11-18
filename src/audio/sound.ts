@@ -27,7 +27,7 @@ export class Sound {
   private master: GainNode | null = null;
   private music: Music | null = null;
 
-  constructor(private readonly storageKey = 'bingoarcade.sound') {
+  constructor(private readonly storageKey = 'balltower.sound') {
     this.cfg = { ...DEFAULTS };
     try {
       const saved = JSON.parse(localStorage.getItem(storageKey) ?? 'null') as Partial<SoundConfig> | null;
